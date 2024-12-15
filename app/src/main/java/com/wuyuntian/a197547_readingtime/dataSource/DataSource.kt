@@ -38,6 +38,34 @@ object DataSource {
             author = listOf("Ricardo Costeira","Subhrajyoti Sen","Antonio Roa-Valverde"),
             pages = 519,
             imageResourceID = R.drawable.android_tutorial
+        ),
+        Book(
+            title = "Linux robotics : programming smarter robots",
+            author= listOf("D. Jay Newman"),
+            pages = 287,
+            year=2006,
+            imageResourceID =R.drawable.linux_rotobics ,
+        ),
+        Book(
+            title = "Linux bible",
+            author= listOf("Christopher Negus"),
+            pages=914,
+            year = 2015,
+            imageResourceID = R.drawable.linux_bible,
+        ),
+        Book(
+            title = "Introduction to Python programming",
+            author = listOf("Gowrishankar S, Veena A."),
+            year=2018,
+            pages = 444,
+            imageResourceID = R.drawable.intro_python,
+        ),
+        Book(
+            title = "Java : an introduction to problem solving & programming",
+            author = listOf("Walter Savitch","Kenrick Mock"),
+            year=2019,
+            pages = 1016,
+            imageResourceID = R.drawable.no_photo,
         )
     )
 

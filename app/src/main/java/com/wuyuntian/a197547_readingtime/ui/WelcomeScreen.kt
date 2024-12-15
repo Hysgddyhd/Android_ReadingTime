@@ -29,12 +29,12 @@ import com.wuyuntian.a197547_readingtime.ui.theme.ReadingTimeTheme
 @Composable
 fun WelcomePage(
     onStartButtonClicked : () -> Unit,
+    modifier: Modifier,
 
 ){
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp),
+        modifier = modifier
+            ,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
 
@@ -60,6 +60,7 @@ fun WelcomePage(
 @Composable
 fun Welcome(){
     ReadingTimeTheme{
-        WelcomePage(onStartButtonClicked = {})
+        WelcomePage(onStartButtonClicked = {}, modifier = Modifier)
+
     }
 }

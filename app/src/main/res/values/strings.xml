@@ -2,6 +2,10 @@
     <string name="app_name">A197547_ReadingTime</string>
     <string name="book_pages">Book pages</string>
     <string name="period">reading days</string>
+    <string name="back_button">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="next">Next</string>
+    <string name="make_a_plan">"Make a Reading Plan"</string>
     <string name="read_plan">I will Read %s pages per day</string>
     <string name="book_info">%1$s is written by %2$d,has %3$d pages,costs %4$.2f Ringgits</string>
 </resources>
