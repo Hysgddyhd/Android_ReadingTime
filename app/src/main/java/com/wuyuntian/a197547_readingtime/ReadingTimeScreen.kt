@@ -1,4 +1,6 @@
 package com.wuyuntian.a197547_readingtime
+import android.content.Context
+import android.content.Intent
 import android.provider.ContactsContract.Data
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.composable
@@ -89,7 +92,9 @@ fun ReadingTimeApp(
         topBar = {
             // TODO: AppBar
             OrderAppBar(
-                navigateUp = {},
+                navigateUp = {
+                    navController.navigateUp()
+                },
                 canNavigateBack = navController.previousBackStackEntry != null,
                 currentScreen = currentScreen
             )
@@ -133,8 +138,8 @@ fun ReadingTimeApp(
             }
             composable(route=ReadingTimeScreen.Planning.name){
                     ReadingBookLayout(
-                        uiState.book,
-                        days = uiState.plan.period,
+                        viewModel.select_book,
+                        day_input = viewModel.day_input,
                         onCancelButtonClicked = {
                             navController.navigate(ReadingTimeScreen.Welcome.name)
                         },
@@ -143,21 +148,54 @@ fun ReadingTimeApp(
 
                         },
                         onInputChange = {
-                            viewModel.updatePlan(it)
+                            viewModel.updateDayInput(it)
                         }
                     )
             }
             composable(route=ReadingTimeScreen.Summary.name){
+                val context = LocalContext.current
                     SummaryScreen(
                         plan = uiState.plan,
                         onClicked = {
                             navController.navigate(ReadingTimeScreen.Welcome.name)
+                            navController.popBackStack(ReadingTimeScreen.Welcome.name, inclusive = false)                        },
+                        onClickShare = {
+                            sharePlan(
+                                intentContext = context,
+                                title = viewModel.select_book.title,
+                                period = uiState.plan.period,
+                                current_page = uiState.plan.reading_progress,
+                                curretn_day = uiState.plan.current_day
+                            )
                         },
                         modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
                     )
             }
         }
     }
+}
+
+private fun  sharePlan(
+    intentContext : Context,
+    title : String,
+    period: Int,
+    current_page : Int,
+    curretn_day:Int
+){
+    val intent= Intent(Intent.ACTION_SEND).apply{
+        type = "text/plain"
+        putExtra(
+            Intent.EXTRA_TEXT,
+            intentContext.getString(R.string.share_plan,title,curretn_day,period,current_page)
+        )
+    }
+    intentContext.startActivity(
+        Intent.createChooser(
+            intent,
+            intentContext.getString(R.string.new_plan)
+        )
+    )
+
 }
 
 @Preview

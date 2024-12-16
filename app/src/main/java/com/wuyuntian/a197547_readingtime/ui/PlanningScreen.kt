@@ -4,10 +4,13 @@ package com.wuyuntian.a197547_readingtime.model
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -49,7 +52,7 @@ class ReadingPlan() {
 @Composable
 fun ReadingBookLayout(
     book1: Book,
-    days : Int,
+    day_input : String,
      onCancelButtonClicked: () -> Unit = {},
     onNextButtonClicked: () -> Unit = {},
     onInputChange: (String) -> Unit
@@ -57,17 +60,17 @@ fun ReadingBookLayout(
 
     //tip rate
 
-    val  ppd = CalculatePagesPerDay(book1.pages.toDouble(),days)
+    val  ppd = CalculatePagesPerDay(book1.pages.toDouble(),day_input)
     //calculate ppd
     Column(
         modifier = Modifier
             .statusBarsPadding()
-            .fillMaxHeight()
+            .fillMaxSize()
             .padding(vertical = 15.dp, horizontal = 10.dp)
             .verticalScroll(rememberScrollState())
             .safeDrawingPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
+
 
         ){
 
@@ -79,6 +82,14 @@ fun ReadingBookLayout(
                 .align(alignment = Alignment.Start)
                 ,
         )
+        Text(
+            text = book1.title,
+            fontSize = 24.sp,
+            textAlign = Center,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .align(Alignment.Start)
+        )
         Image(
             painter = painterResource(book1.imageResourceID),
             contentDescription = "",
@@ -88,7 +99,7 @@ fun ReadingBookLayout(
         //main
         EditNumberField(
             book1.pages,
-            days.toString(),
+            day_input,
             onInputChange,
             modifier = Modifier
                 .padding(bottom = 32.dp)
@@ -100,6 +111,9 @@ fun ReadingBookLayout(
             fontSize = 32.sp,
             modifier = Modifier,
             textAlign = Center,
+        )
+        Spacer(
+            Modifier.height(120.dp)
         )
         MenuScreenButtonGroup(
             selectedItemName = book1.title,
@@ -126,7 +140,7 @@ fun EditNumberField(
     //amount input
     Text(
         text = "Pages: "+page.toString(),
-        fontSize = 36.sp
+        fontSize = 28.sp
 
         )
     //tip rate
@@ -146,8 +160,11 @@ fun EditNumberField(
 }
 
 @Composable
-private fun CalculatePagesPerDay(page : Double ,day : Int) : Double{
-    val period = day.toDouble()
+private fun CalculatePagesPerDay(page : Double ,day_input : String) : Double{
+    if ( day_input.equals("")){
+        return page
+    }
+    val period = day_input.toDouble()
     if ( period ==0.0){
         return page
     }
@@ -196,7 +213,7 @@ fun GreetingPreview() {
         Surface(
             modifier = Modifier.fillMaxSize()
         ){
-            ReadingBookLayout(book1, onInputChange = {}, days = 0)
+            ReadingBookLayout(book1, onInputChange = {}, day_input = "")
         }
     }
 }

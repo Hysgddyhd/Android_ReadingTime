@@ -5,7 +5,10 @@
     <string name="back_button">Back</string>
     <string name="cancel">Cancel</string>
     <string name="next">Next</string>
-    <string name="make_a_plan">"Make a Reading Plan"</string>
+    <string name="make_a_plan">Make a Reading Plan</string>
     <string name="read_plan">I will Read %s pages per day</string>
     <string name="book_info">%1$s is written by %2$d,has %3$d pages,costs %4$.2f Ringgits</string>
+    <string name="page_progress">Reading progress: %1$s/%2$s Pages</string>
+    <string name="share_plan">I have read %1$s for %2$d days, supposedly finish in %3$d days, currently at %4$d pages</string>
+    <string name="new_plan">New_Plan_</string>
 </resources>
