@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">A197547_ReadingTime</string>
+    <string name="app_name">ReadingPlan</string>
     <string name="book_pages">Book pages</string>
     <string name="period">reading days</string>
     <string name="back_button">Back</string>
