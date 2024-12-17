@@ -47,6 +47,9 @@ class MainActivity : ComponentActivity() {
         Log.d("lifecycle","onStart")
         enableEdgeToEdge()
         setContent {
+            ReadingTimeTheme {
+                ReadingTimeApp()
+            }
         }
     }
     override fun onStart(){

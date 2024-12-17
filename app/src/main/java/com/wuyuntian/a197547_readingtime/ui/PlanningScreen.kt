@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -93,8 +94,9 @@ fun ReadingBookLayout(
         Image(
             painter = painterResource(book1.imageResourceID),
             contentDescription = "",
-            contentScale = ContentScale.FillWidth
-
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .width(200.dp)
             )
         //main
         EditNumberField(
@@ -113,7 +115,7 @@ fun ReadingBookLayout(
             textAlign = Center,
         )
         Spacer(
-            Modifier.height(120.dp)
+            Modifier.height(20.dp)
         )
         MenuScreenButtonGroup(
             selectedItemName = book1.title,

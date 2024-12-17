@@ -124,7 +124,7 @@ fun PlanCard(book : Book,
             modifier = modifier
                 .clip(MaterialTheme.shapes.small)
                 .fillMaxWidth()
-                .height(210.dp),
+                .height(350.dp),
 
         ) {
             Row(

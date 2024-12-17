@@ -33,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.composable
 import com.wuyuntian.a197547_readingtime.dataSource.DataSource
 import com.wuyuntian.a197547_readingtime.model.ReadingBookLayout
@@ -121,7 +122,7 @@ fun ReadingTimeApp(
                 BooklistScreen(
                     options = DataSource.BookList,
                     onCancelButtonClicked = {
-                        navController.navigate(ReadingTimeScreen.Welcome.name)
+                           cancelOrderAndNavigateToStart(viewModel,navController)
 
                     },
                     onNextButtonClicked = {
@@ -141,7 +142,7 @@ fun ReadingTimeApp(
                         viewModel.select_book,
                         day_input = viewModel.day_input,
                         onCancelButtonClicked = {
-                            navController.navigate(ReadingTimeScreen.Welcome.name)
+                           cancelOrderAndNavigateToStart(viewModel,navController)
                         },
                         onNextButtonClicked = {
                             navController.navigate(ReadingTimeScreen.Summary.name)
@@ -157,8 +158,9 @@ fun ReadingTimeApp(
                     SummaryScreen(
                         plan = uiState.plan,
                         onClicked = {
-                            navController.navigate(ReadingTimeScreen.Welcome.name)
-                            navController.popBackStack(ReadingTimeScreen.Welcome.name, inclusive = false)                        },
+                            navController.popBackStack(ReadingTimeScreen.Welcome.name, inclusive = false)
+
+                                    },
                         onClickShare = {
                             sharePlan(
                                 intentContext = context,
@@ -173,6 +175,14 @@ fun ReadingTimeApp(
             }
         }
     }
+}
+
+private fun cancelOrderAndNavigateToStart(
+    viewModel : PlanViewModel,
+    navController: NavController
+) {
+    viewModel.resetPlan()
+    navController.popBackStack(ReadingTimeScreen.Welcome.name, inclusive = false)
 }
 
 private fun  sharePlan(

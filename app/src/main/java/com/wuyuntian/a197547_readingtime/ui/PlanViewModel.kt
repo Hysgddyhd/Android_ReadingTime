@@ -29,8 +29,14 @@ class PlanViewModel : ViewModel() {
         resetPlan()
     }
     fun resetPlan() {
-        usedWords.clear()
+        select_book = Book("", listOf(""), pages = 0, imageResourceID = R.drawable.no_photo)
         day_input=""
+        _uiState.update { currentState->
+            currentState.copy(
+                book = select_book
+            )
+
+        }
 
     }
 
