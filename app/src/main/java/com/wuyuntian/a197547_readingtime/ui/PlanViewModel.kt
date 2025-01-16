@@ -1,28 +1,25 @@
 package com.wuyuntian.a197547_readingtime.ui
 
-import android.os.Bundle
-import android.util.Log
-import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.wuyuntian.a197547_readingtime.Book
-import com.wuyuntian.a197547_readingtime.Plan
 import com.wuyuntian.a197547_readingtime.R
 import com.wuyuntian.a197547_readingtime.model.PlanUiState
+import com.wuyuntian.a197547_readingtime.room.Plan
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 
 class PlanViewModel : ViewModel() {
     var select_book:Book = Book("", listOf(""), pages = 0, imageResourceID = R.drawable.no_photo)
-    private val _uiState = MutableStateFlow(PlanUiState())
+    val _uiState = MutableStateFlow(PlanUiState())
     val uiState : StateFlow<PlanUiState> = _uiState.asStateFlow()
-    private var usedWords: MutableSet<String> = mutableSetOf()
-    var day_input by mutableStateOf("")
+    var day_input by mutableStateOf("0")
+        private set
+    var priority_input by mutableStateOf("0")
         private set
 
      init {
@@ -30,7 +27,8 @@ class PlanViewModel : ViewModel() {
     }
     fun resetPlan() {
         select_book = Book("", listOf(""), pages = 0, imageResourceID = R.drawable.no_photo)
-        day_input=""
+        day_input="0"
+        priority_input="0"
         _uiState.update { currentState->
             currentState.copy(
                 book = select_book
@@ -44,14 +42,7 @@ class PlanViewModel : ViewModel() {
 
     fun updateSelectedBook(book1 : Book ){
         select_book = book1
-        updatePlan(
-            Plan(
-                book = book1,
-                reading_progress = 0,
-                period  =   1,
-                current_day = 1
-            )
-        )
+
     }
     //update booklist
     fun updateBooklist(new_booklist:List<Book>){
@@ -66,19 +57,18 @@ class PlanViewModel : ViewModel() {
 
     fun updateDayInput(input:String){
         day_input=input.plus("")
-        if(day_input.equals("")){
-        } else {
+        if(!input.equals("")){
             val day = day_input.toInt()
-            updatePlan(Plan(select_book,0, period = day,1))
         }
     }
-    fun updatePlan(plan:Plan){
-        _uiState.update { currentState->
-            currentState.copy(
-                plan = plan
-            )
+    fun updatePriority(input: String){
+        priority_input=input
+        if(!input.equals("")){
+            val priority = priority_input.toInt()
         }
     }
+
+
 
     //update pages per day
     fun updatePlan(

@@ -68,5 +68,13 @@ object DataSource {
             imageResourceID = R.drawable.no_photo,
         )
     )
+    val book_sample=Book(
+            title = "Linux All-in-One for Dummies (7TH)",
+            author = listOf("Richard Blum"),
+            pages = 576,
+            price = 157.83 ,
+            imageResourceID = R.drawable.linux_dummy
+            //reference : https://malaysia.kinokuniya.com/Linux_All-in-One_for_Dummies_(7TH)/bw/9781119901921
+        )
 
 }

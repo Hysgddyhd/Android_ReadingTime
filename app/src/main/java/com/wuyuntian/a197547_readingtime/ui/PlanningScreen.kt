@@ -4,10 +4,8 @@ package com.wuyuntian.a197547_readingtime.model
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,107 +16,112 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wuyuntian.a197547_readingtime.Book
+import com.wuyuntian.a197547_readingtime.room.Plan
 import com.wuyuntian.a197547_readingtime.R
 import com.wuyuntian.a197547_readingtime.ui.theme.ReadingTimeTheme
-import kotlin.math.roundToInt
 
-class ReadingPlan() {
 
-}
-
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ReadingBookLayout(
-    book1: Book,
+    plan: Plan,
     day_input : String,
-     onCancelButtonClicked: () -> Unit = {},
+    priority_input:String,
+    onCancelButtonClicked: () -> Unit = {},
     onNextButtonClicked: () -> Unit = {},
-    onInputChange: (String) -> Unit
+    onInputChange: (String) -> Unit,
+    onPrioChange:(String) -> Unit,
+    modifier:Modifier=Modifier
 ){
 
     //tip rate
 
-    val  ppd = CalculatePagesPerDay(book1.pages.toDouble(),day_input)
     //calculate ppd
     Column(
         modifier = Modifier
             .statusBarsPadding()
-            .fillMaxSize()
             .padding(vertical = 15.dp, horizontal = 10.dp)
             .verticalScroll(rememberScrollState())
             .safeDrawingPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
-
-
+        verticalArrangement = Arrangement.Center
         ){
 
         Text(
             text = stringResource(R.string.make_a_plan),
-            fontSize = 24.sp,
+            fontSize = 28.sp,
+            textAlign = Center,
             modifier = Modifier
                 .padding(bottom = 24.dp, top = 40.dp)
-                .align(alignment = Alignment.Start)
                 ,
         )
         Text(
-            text = book1.title,
+            text = plan.book.title,
             fontSize = 24.sp,
-            textAlign = Center,
+            textAlign = TextAlign.Start,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .align(Alignment.Start)
         )
         Image(
-            painter = painterResource(book1.imageResourceID),
+            painter = painterResource(plan.book.imageResourceID),
             contentDescription = "",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .width(200.dp)
             )
+            //amount input
+        Text(
+            text = "Pages: "+plan.book.pages.toString(),
+            fontSize = 28.sp,
+            modifier = Modifier
+                .padding(19.dp)
+
+        )
         //main
         EditNumberField(
-            book1.pages,
+            plan.book.pages,
             day_input,
             onInputChange,
+
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
         )
-        Text(
-            text = stringResource(R.string.read_plan,ppd),
-            style = MaterialTheme.typography.displaySmall,
-            fontSize = 32.sp,
-            modifier = Modifier,
-            textAlign = Center,
+        EditPriorityField(
+            priInput = priority_input,
+            onInputChange = onPrioChange,
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth()
         )
         Spacer(
             Modifier.height(20.dp)
         )
         MenuScreenButtonGroup(
-            selectedItemName = book1.title,
+            selectedItemName = plan.book.title,
             onCancelButtonClicked = onCancelButtonClicked,
             onNextButtonClicked =
                 // Assert not null bc next button is not enabled unless selectedItem is not null.
@@ -139,12 +142,7 @@ fun EditNumberField(
     onDayChange: (String) -> Unit,
     modifier: Modifier = Modifier) {
 
-    //amount input
-    Text(
-        text = "Pages: "+page.toString(),
-        fontSize = 28.sp
 
-        )
     //tip rate
     TextField(
         value = dayInput,
@@ -155,24 +153,38 @@ fun EditNumberField(
         //    leadingIcon = { Icon(painter = painterResource(id = R.drawable.ic_launcher_foreground), null) },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done),
+            imeAction = ImeAction.Next),
 
         )
 
 }
 
 @Composable
-private fun CalculatePagesPerDay(page : Double ,day_input : String) : Double{
-    if ( day_input.equals("")){
-        return page
-    }
-    val period = day_input.toDouble()
-    if ( period ==0.0){
-        return page
-    }
-    val ppd = page / period
-    return ppd.roundToInt().toDouble()
+fun EditPriorityField(
+    priInput:String,
+    onInputChange: (String) -> Unit,
+    modifier: Modifier = Modifier) {
+
+    //amount input
+
+    //tip rate
+    TextField(
+        value = priInput,
+        onValueChange = onInputChange,
+        label= {
+            Text("Priority", color = Color.Black)
+        },
+        modifier = modifier,
+        singleLine = true,
+        //    leadingIcon = { Icon(painter = painterResource(id = R.drawable.ic_launcher_foreground), null) },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Done),
+
+        )
+
 }
+
 
 @Composable
 fun MenuScreenButtonGroup(
@@ -200,22 +212,3 @@ fun MenuScreenButtonGroup(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    val book1 : Book =  Book(
-            title = "Linux All-in-One for Dummies (7TH)",
-            author = listOf("Richard Blum"),
-            pages = 576,
-            price = 157.83 ,
-            imageResourceID = R.drawable.linux_dummy
-            //reference : https://malaysia.kinokuniya.com/Linux_All-in-One_for_Dummies_(7TH)/bw/9781119901921
-        )
-    ReadingTimeTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ){
-            ReadingBookLayout(book1, onInputChange = {}, day_input = "")
-        }
-    }
-}

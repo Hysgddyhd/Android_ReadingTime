@@ -21,10 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.wuyuntian.a197547_readingtime.Book
 import com.wuyuntian.a197547_readingtime.R
-import com.wuyuntian.a197547_readingtime.model.MenuItem
 
 @Composable
 fun BaseMenuScreen(
@@ -92,11 +90,11 @@ fun MenuItemRow(
             )
             Text(
                 text = item.author.toString(),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = item.price.toString()+" RM",
-                style = MaterialTheme.typography.bodyMedium
+                text = item.pages.toString()+" pages",
+                style = MaterialTheme.typography.bodyLarge
             )
             Divider(
                 thickness = dimensionResource(R.dimen.thickness_divider),

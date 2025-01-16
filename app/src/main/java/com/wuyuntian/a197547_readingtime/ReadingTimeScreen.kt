@@ -1,4 +1,5 @@
 package com.wuyuntian.a197547_readingtime
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.provider.ContactsContract.Data
@@ -6,9 +7,12 @@ import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -28,12 +32,19 @@ import androidx.navigation.compose.rememberNavController
 import com.wuyuntian.a197547_readingtime.ui.PlanViewModel
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.composable
 import com.wuyuntian.a197547_readingtime.dataSource.DataSource
 import com.wuyuntian.a197547_readingtime.model.ReadingBookLayout
@@ -46,6 +57,7 @@ import com.wuyuntian.a197547_readingtime.ui.theme.ReadingTimeTheme
 enum class ReadingTimeScreen() {
     Welcome,
     Booklist,
+    Books,
     Planning,
     Summary,
 }
@@ -59,7 +71,7 @@ private fun OrderAppBar(
     modifier: Modifier = Modifier
 ){
     TopAppBar(
-        title = { Text(stringResource(R.string.app_name)) },
+        title = { Text(currentScreen.name.toString()) },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = Color.Gray
         ),
@@ -79,6 +91,7 @@ private fun OrderAppBar(
 
 
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun ReadingTimeApp(
     navController : NavHostController = rememberNavController()
@@ -89,17 +102,59 @@ fun ReadingTimeApp(
     val currentScreen = ReadingTimeScreen.valueOf(
             backStackEntry?.destination?.route ?: ReadingTimeScreen.Welcome.name
     )
+    val topLevelRoutes = listOf(
+            TopLevelRoute("Plan", ReadingTimeScreen.Summary.name, Icons.Filled.Home),
+            TopLevelRoute("Add",ReadingTimeScreen.Welcome.name, Icons.Filled.Add),
+            TopLevelRoute("Book",ReadingTimeScreen.Books.name, Icons.Default.Info)
+    )
+    val canNotNaviBack=navController.currentDestination?.route==ReadingTimeScreen.Welcome.name ||
+            navController.currentDestination?.route==ReadingTimeScreen.Books.name ||
+            navController.currentDestination?.route==ReadingTimeScreen.Summary.name
     Scaffold(
         topBar = {
-            // TODO: AppBar
             OrderAppBar(
                 navigateUp = {
                     navController.navigateUp()
                 },
-                canNavigateBack = navController.previousBackStackEntry != null,
+                canNavigateBack = !canNotNaviBack,
                 currentScreen = currentScreen
             )
-        }
+        },
+        bottomBar = {
+          BottomNavigation {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
+            topLevelRoutes.forEach { topLevelRoute ->
+              BottomNavigationItem(
+                icon = { Icon(topLevelRoute.icon, contentDescription = topLevelRoute.name) },
+                label = { Text(topLevelRoute.name) },
+                selected = currentDestination?.hierarchy?.any {
+                    it.hasRoute(
+                        topLevelRoute.route::class.toString(),
+                        arguments = null
+                    )
+                } == true,
+                onClick = {
+                    navController.navigate(topLevelRoute.route) {
+                    // Pop up to the start destination of the graph to
+                    // avoid building up a large stack of destinations
+                    // on the back stack as users select items
+                    popUpTo(navController.graph.findStartDestination().id) {
+                      saveState = true
+                    }
+                    // Avoid multiple copies of the same destination when
+                    // reselecting the same item
+                    launchSingleTop = true
+                    // Restore state when reselecting a previously selected item
+                    restoreState = true
+                  }
+                }
+              )
+            }
+          }
+        },
+        modifier = Modifier.heightIn(max=875.dp)
+
     ){innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
 
@@ -139,8 +194,9 @@ fun ReadingTimeApp(
             }
             composable(route=ReadingTimeScreen.Planning.name){
                     ReadingBookLayout(
-                        viewModel.select_book,
+                        uiState.plan,
                         day_input = viewModel.day_input,
+                        priority_input = viewModel.priority_input,
                         onCancelButtonClicked = {
                            cancelOrderAndNavigateToStart(viewModel,navController)
                         },
@@ -150,7 +206,13 @@ fun ReadingTimeApp(
                         },
                         onInputChange = {
                             viewModel.updateDayInput(it)
-                        }
+                        },
+                        onPrioChange = {
+                            viewModel.updatePriority(it)
+                        },
+                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+                            .verticalScroll(rememberScrollState())
+                            .fillMaxSize()
                     )
             }
             composable(route=ReadingTimeScreen.Summary.name){
@@ -167,15 +229,25 @@ fun ReadingTimeApp(
                                 title = viewModel.select_book.title,
                                 period = uiState.plan.period,
                                 current_page = uiState.plan.reading_progress,
-                                curretn_day = uiState.plan.current_day
+                                curretn_day = uiState.plan.current_day.day
                             )
                         },
                         modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
                     )
             }
+            composable(route=ReadingTimeScreen.Books.name){
+                    BooklistScreen(
+                        booklist = DataSource.BookList,
+                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+                            .verticalScroll(rememberScrollState())
+                            .fillMaxSize()
+                    )
+            }
         }
     }
 }
+
+
 
 private fun cancelOrderAndNavigateToStart(
     viewModel : PlanViewModel,
@@ -216,3 +288,9 @@ fun ReadingPlan(){
     }
 
 }
+
+data class TopLevelRoute<T : Any>(
+  val name: String,
+  val route: T,
+  val icon: ImageVector
+)
