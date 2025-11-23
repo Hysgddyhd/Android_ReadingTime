@@ -1,0 +1,80 @@
+package com.wuyuntian.a197547_readingtime.dataSource
+
+import com.wuyuntian.a197547_readingtime.Book
+import com.wuyuntian.a197547_readingtime.R
+
+object DataSource {
+    val BookList = listOf(
+        Book(
+            title = "Linux All-in-One for Dummies (7TH)",
+            author = listOf("Richard Blum"),
+            pageCount = 576,
+            price = 157.83f,
+            imageResourceID = R.drawable.linux_dummy
+            //reference : https://malaysia.kinokuniya.com/Linux_All-in-One_for_Dummies_(7TH)/bw/9781119901921
+        ),
+        Book(
+            title = "internet_w3_how_to_program_5ed",
+            author = listOf("Paul Deitel", "Harvey Deitel", "Abbey Deitel"),
+            pageCount = 1202,
+            imageResourceID = R.drawable.internet_program,
+        ),
+        Book(
+            title = "beginners_guide_data_science_sample",
+            author = listOf("Vinod Chugani"),
+            pageCount = 35,
+            imageResourceID = R.drawable.beginners_guide_data_science_sample,
+            price = 0.0f
+        ),
+        Book(
+            title = "Compilers Second Edition Principles, Techniques, & Tools",
+            author = listOf("Alfred V. Aho", "Monica S. Lam", "Ravi Sethi"),
+            pageCount = 1035,
+            imageResourceID = R.drawable.compilers,
+
+            ),
+        Book(
+            title = "Real-World Android by Tutorials",
+            author = listOf("Ricardo Costeira", "Subhrajyoti Sen", "Antonio Roa-Valverde"),
+            pageCount = 519,
+            imageResourceID = R.drawable.android_tutorial
+        ),
+        Book(
+            title = "Linux robotics : programming smarter robots",
+            author = listOf("D. Jay Newman"),
+            pageCount = 287,
+            year = 2006,
+            imageResourceID = R.drawable.linux_rotobics,
+        ),
+        Book(
+            title = "Linux bible",
+            author = listOf("Christopher Negus"),
+            pageCount = 914,
+            year = 2015,
+            imageResourceID = R.drawable.linux_bible,
+        ),
+        Book(
+            title = "Introduction to Python programming",
+            author = listOf("Gowrishankar S, Veena A."),
+            year = 2018,
+            pageCount = 444,
+            imageResourceID = R.drawable.intro_python,
+        ),
+        Book(
+            title = "Java : an introduction to problem solving & programming",
+            author = listOf("Walter Savitch", "Kenrick Mock"),
+            year = 2019,
+            pageCount = 1016,
+            imageResourceID = R.drawable.no_photo,
+        )
+    )
+    val book_sample = Book(
+        title = "Linux All-in-One for Dummies (7TH)",
+        author = listOf("Richard Blum"),
+        pageCount = 576,
+        price = 157.83f,
+        imageResourceID = R.drawable.linux_dummy
+        //reference : https://malaysia.kinokuniya.com/Linux_All-in-One_for_Dummies_(7TH)/bw/9781119901921
+    )
+
+}
