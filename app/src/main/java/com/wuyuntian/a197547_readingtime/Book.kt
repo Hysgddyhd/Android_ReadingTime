@@ -1,14 +1,13 @@
 package com.wuyuntian.a197547_readingtime
 
 import androidx.annotation.DrawableRes
-import java.text.NumberFormat
 
 data class Book(
-    val title : String ,
-    val author : List<String> ,
-    val pages : Int,
+    val title : String,
+    val author : List<String>,
+    val pageCount : Int,
     val year:Int? =null,
-    var price : Double = 15.00 ,
+    var price : Float = 15.00f,
     @DrawableRes val imageResourceID : Int
 )
 

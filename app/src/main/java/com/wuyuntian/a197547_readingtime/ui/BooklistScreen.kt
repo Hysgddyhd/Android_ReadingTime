@@ -103,7 +103,8 @@ fun BookCard(
 @Composable
 fun BooklistScreenPreview(){
     BooklistScreen(
-        booklist = BookList, modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+        booklist = BookList,
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     )
 }
 @Preview
@@ -113,8 +114,7 @@ fun BookCardPreview(){
 }
 @Preview
 @Composable
-fun showMeBook(){
-
+fun ShowMeBook(){
     BooklistScreen(
         options = DataSource.BookList,
         onCancelButtonClicked = {},

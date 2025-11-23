@@ -93,7 +93,7 @@ fun MenuItemRow(
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = item.pages.toString()+" pages",
+                text = item.pageCount.toString()+" pages",
                 style = MaterialTheme.typography.bodyLarge
             )
             Divider(

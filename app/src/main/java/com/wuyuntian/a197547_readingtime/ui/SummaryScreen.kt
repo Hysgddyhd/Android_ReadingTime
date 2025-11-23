@@ -35,9 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wuyuntian.a197547_readingtime.Book
-import com.wuyuntian.a197547_readingtime.room.Plan
 import com.wuyuntian.a197547_readingtime.R
-import java.util.Date
+import com.wuyuntian.a197547_readingtime.room.Plan
+import java.time.LocalDate
 
 
 @Composable
@@ -134,12 +134,12 @@ fun PlanCard(book : Book,
                         textAlign = Center
                     )
                     Text(
-                        text = stringResource(R.string.page_progress,plan.reading_progress,book.pages),
+                        text = stringResource(R.string.page_progress,plan.reading_progress,book.pageCount),
                         fontSize = 24.sp,
                         textAlign = Center
                     )
                     Text(
-                        text ="Day: "+ plan.current_day.toString()+"/"+plan.period.toString(),
+                        text ="Day: "+ plan.start_day.toString()+"/"+plan.period.toString(),
                         fontSize = 18.sp,
                         textAlign = End
                     )
@@ -194,8 +194,8 @@ fun showMeBook(){
     val book1 : Book =  Book(
             title = "Linux All-in-One for Dummies (7TH)",
             author = listOf("Richard Blum"),
-            pages = 576,
-            price = 157.83 ,
+            pageCount = 576,
+            price = 157.83f ,
             imageResourceID = R.drawable.linux_dummy
             //reference : https://malaysia.kinokuniya.com/Linux_All-in-One_for_Dummies_(7TH)/bw/9781119901921
         )
@@ -203,7 +203,7 @@ fun showMeBook(){
       plan = Plan(
           1,book1, 0, 10,
           period = 10,
-          current_day = Date()
+          start_day = LocalDate.now()
       ),
       modifier = Modifier
         .padding(dimensionResource(R.dimen.padding_small))
